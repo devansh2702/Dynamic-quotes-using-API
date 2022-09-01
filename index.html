@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        body{
+            padding: 0;
+            margin:0;
+            background-color: floralwhite;
+        }
+        .container{
+            
+            margin: 5%;
+            align-self: center;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(244, 251, 120, 0.701);
+            height: 90%;
+            width: 70%;
+            padding: 5px;
+        }
+        .inner{
+            padding: 10%;
+            background-color: rgb(151, 173, 212);
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        .box{
+            display: block;
+            height:20rem;
+            border: 5px solid;
+            background-color: rgb(158, 231, 158);
+            position: relative;
+            align-items: center;
+            justify-content: center;
+        }
+        .text{
+            
+           padding: 20%;
+           font-weight: 200;
+           font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        }
+        img{
+            height: 30px;
+            width: 30px;
+            position:absolute;
+            right: 10px;
+            top: 10px;
+        }
+        .button{
+            font-family: 'Courier New', Courier, monospace;
+            padding: 0%;
+            width: 100%;
+            background-color: cornsilk;
+            position: absolute;
+            bottom: 0px;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+            align-self: center;
+        }
+       
+        .button p{
+            display: flex;
+            
+            justify-content: center;
+        }
+        
+    </style>
+    
+    <title>dynamic quotes</title>
+</head>
+<body>
+
+    <div class="container">
+        <div class="inner">
+            <div class="box">
+                <p class="number">
+                    <img src="images/logo.png" alt="tweet" title="tweetMe" id="tweetMe">
+                </p>
+                <div class="text">
+                    <i class="fa-solid fa-quote-left"></i>
+                    <p id="quotes" class="quotes"></p>
+                    <p class="author" id="author" style="padding: 10%;"></p>
+
+                </div>
+
+                <label class="button">
+                    <p id="newQ">New Quotes</p>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const quotes=document.getElementById('quotes');
+        const author=document.getElementById('author');
+        const newQ=document.getElementById('newQ');
+        const tweetMe=document.getElementById('tweetMe');
+
+        let realdata="";
+        let quotesData="";
+
+        const tweetNow=()=>{
+            let tweetpost= `https://twitter.com/intent/tweet?text=${quotesData.text} ${quotesData.author}`;
+            window.open(tweetpost);
+        }
+        const getNewQuotes=()=>{
+            let rnum=Math.floor(Math.random()*100);
+            // console.log(realdata[rnum]); 
+            quotesData=realdata[rnum];
+            quotes.innerText= `${quotesData.text}`;
+
+            quotesData.author== null
+            ? (author.innerText="Anonymous")
+            : (author.innerText=`${quotesData.author}`);
+            
+        };
+
+        const getQuotes= async()=>{
+            const api="https://type.fit/api/quotes";
+            try {
+                let data=await fetch(api);
+                 realdata=await data.json();
+                //console.log(realdata.length);
+
+                getNewQuotes();
+            } catch (error) {}
+        };
+        newQ.addEventListener('click',getNewQuotes);
+        tweetMe.addEventListener('click',tweetNow);
+        getQuotes();
+    </script>
+</body>
+</html>
